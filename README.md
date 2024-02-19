@@ -239,9 +239,13 @@ echo hello, world!
 
 After that was successful, I then took the Dockerfile from the sample code repo,
 used for the Docker Containerization demo, and edited it to build a container 
-image of my Web API instead. Which, speaking of, I should mention real quick!
+image of my Web API instead. 
 
-#### My Container Project: A Web API That Uses Scoped Services To Handle HTTP Requests
+![Dockerfile Download For Templating](img/Dockerfile_Setup.png)
+
+Which, speaking of, I should mention real quick!
+
+##### (Quick Aside) My Container Project: A Web API That Uses Scoped Services To Handle HTTP Requests
 
 Just like the Web App version, this is a liaison for an Azure SQL Database that
 is configured to act as a bulletin board. The main differences here are that
@@ -249,5 +253,112 @@ this uses the REST API on ASP.NET, so you don't even have to use a browser to
 make posts on the bulletin board. You can use CURL or any other custom client, 
 so long as it knows how to make HTTP requests and knows the proper format the API
 expects requests to conform to.
+
+Here is a brief little overview of the endpoints set up:
+
+![BulletinBoard-Api Endpoints](img/BBApi_Endpts.png)
+
+So back to the containerization process. I took the Dockerfile from the sample 
+project, and edited it to use my project, BulletinBoard-Api, instead:
+
+![Revised Dockerfile](img/DockerfileRevisionsForMyProject.png)
+
+Now that we have our custom Dockerfile, let's build the image!
+
+![Build Cmd](img/DockerBuildCmd.png)
+
+And the result of the build attempt:
+
+![Build Outcome](img/DockerBuild_Outcome.png)
+
+Success! Now we can log into the Container Registry directly through the docker CLI tool!
+
+![Docker CR Login](img/CRLogin.png)
+
+And the result of the login attempt:
+
+![Docker Login Successful](img/CRLogin_Success.png)
+
+Now that we are logged in, let's tag our local build image to an image repo
+in our container registry:
+
+![Docker Image Tag and Push](img/DockerContainerPushed.png)
+
+Finally, now that our container has been pushed, we can make a new Web App
+resource and make it source from the container in our registry!
+
+![Make New Containerized Web App](img/DockerWebAppSettings.png)
+
+![Review and Create Web App](img/DockerWebAppReviewAndCreate.png)
+
+Now let's make sure it's running properly. Let's get the link:
+
+![Web API Link](img/WebAPI.png)
+
+And try out the /post endpoint, which returns all posts on the DB.
+
+![Web API Test](img/WebAPI_Works.png)
+
+It works! Now to test out continuous deployment! First let's turn it on!
+
+![Set Continuous Deployment](img/Set_Continuous_Deployment.png)
+
+Next, let's fix an issue with the endpoints. I originally messed up the 
+routing declarations when writing the controllers' code, so they're all 
+being routed from the root domain:
+
+![Endpoints Before Fix](img/Endpoints_Before.png)
+
+The issue was that I wrote the routes with a leading '/' which the compiler
+interpreted as meaning route from root, instead of, route from controller's
+API route.
+
+```cs
+/* For example, say we have a create account endpoint
+ * in AccountController. I want the route to be:
+ * <domain>/Account/Create
+ * but because of how I wrote it, it would route to,
+ * <domain>/Create>, instead. Hence why the POST 
+ * for a new Account is called Create, and the POST
+ * for a new Post is called CreateNew. They were originally
+ * both named Create, but since I messed up the routing annotation,
+ * they were both  being routed from root domain, and, as such,
+ * were conflicting with one another.
+ * */
+
+// What I had written:
+[HttpPost("/Create")]
+
+// What I needed to write instead:
+[Route("Create")]
+```
+
+Here's what the endpoints look like now that they're fixed.
+
+![Endpoints After](img/Endpoints_After.png)
+
+And, actually, now that I see it again, I gotta rename /Post/CreateNew
+back to /Post/Create since, now that they're properly routed, it won't
+conflict with /Account/Create.
+
+
+**Anyway** after I rewrote the endpoint annotations for the controllers, I then 
+rebuilt my local docker image so that the new compiled binaries are on it,
+and then pushed the latest build of that image to the container registry!
+
+![Push Changes](img/Docker_Rebuild_And_Push.png)
+
+As you may have noticed, I had to push the image twice because I originally forgot
+to retag the container registry repo to be tagged to the *latest* build of my local
+project image. **Now, lets test to see that the continuous deployment worked!**
+
+![Continuous Deployment Worked](img/ContinuousDeploymentWorked.png)
+
+As can be seen in the URL, our HTTP GET request for a specific post by GUID 
+used the route, \<domain name>/Post/\<post GUID>, which is correctly routed.
+Before the changes we made, it would have had to be requested via the route,
+\<>domain name/\<post GUID>.
+
+## Task 7, 8, & 9: Configuring Metrics, Scaling Out, Scaling Up
 
 
