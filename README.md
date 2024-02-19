@@ -210,4 +210,9 @@ after we set up our docker image-based containerized web app.
 
 ## Task 10: Create Azure Docker Registry
 
+The container registry I created was simply named csce590, and as the name 
+suggests, will only contain docker images pertinent to this class (maybe).
+
+![Container Registry Setup](img/Container_Registry_Create.png)
+
 
