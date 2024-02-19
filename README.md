@@ -104,25 +104,15 @@ and find our target resource and hit deploy from its dropdown menu:
 
 ![Deployment Confirmation](img/Deploy_Confirmation_VSCode.png)
 
-##### Quick Side Note:
+Now that we've published the changes using the Azure App Service extension for 
+VSCode, we can see the changes reflected on the web app home page:
 
-When compiling together all of my screenshots onto this Markdown file, I 
-realized that I forgot to take a screenshot of the deployed bugfix onto VSCode.
-As a result, I have made this next screenshot taken from the staging deployment
-slot, which will be shown on the next task. I figured, since part of our task
-was to configure and perform a deployment slot swap, the version of the website
-on the staging slot will reflect the version of the website that was deployed
-during this task, as the only major changes that have occurred between here and 
-the next task are the ones I made in order to show the swap worked on the next 
-task. 
+![Bug Fixed and Published](img/BugFix_Via_VSCode.png)
 
-(Disregard the other post's names and content. I made the regrettable 
-decision to allow some of my friends to add whatever they wanted to the website.
-I did, at the very least, make sure to keep the posts SFW. I could delete it by 
-accessing the SQL Server using Azure Portal or connecting to it via SqlLite, but
-I figured that wouldn't be in good faith.)
+And it worked! Now, the homepage sorts by date, in descending order (i.e.: 
+newest posts are at the top).
 
-![Deployment Live From Staging Slot](img/VSCode_Deployment_From_Staging_Slot.png)
+
 
 ## Tasks 6 & 9: Create and Configure Deployment Slots (Task 6) & Scale Up Our Web App (Task 9)
 
@@ -219,3 +209,5 @@ I'm going to now talk about the container tasks, and return to Tasks 7, 8, and 9
 after we set up our docker image-based containerized web app.
 
 ## Task 10: Create Azure Docker Registry
+
+
