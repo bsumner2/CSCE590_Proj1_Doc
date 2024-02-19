@@ -215,4 +215,39 @@ suggests, will only contain docker images pertinent to this class (maybe).
 
 ![Container Registry Setup](img/Container_Registry_Create.png)
 
+And here it is after setting it up:
+
+![Container Registry Azure Portal Page](img/ContainerRegistry_Page.png)
+
+After that, I had to install Docker on Linux. This, in spite of previous 
+fiddling with containers on Linux in the past, was *surprisingly* easy to do on 
+Linux this time around! For my Linux Distro, Arch Linux, the package manager,
+pacman, is what I used to install Docker.
+
+```bash
+$ sudo pacman -S docker
+```
+
+After I installed it, I tested it out with the ArchWiki's recommended test
+image, a simple container that uses an Arch Linux image, and just runs
+
+```bash
+echo hello, world!
+```
+
+![Test Docker Locally Command](img/Test_Docker_Install.png)
+
+After that was successful, I then took the Dockerfile from the sample code repo,
+used for the Docker Containerization demo, and edited it to build a container 
+image of my Web API instead. Which, speaking of, I should mention real quick!
+
+#### My Container Project: A Web API That Uses Scoped Services To Handle HTTP Requests
+
+Just like the Web App version, this is a liaison for an Azure SQL Database that
+is configured to act as a bulletin board. The main differences here are that
+this uses the REST API on ASP.NET, so you don't even have to use a browser to
+make posts on the bulletin board. You can use CURL or any other custom client, 
+so long as it knows how to make HTTP requests and knows the proper format the API
+expects requests to conform to.
+
 
