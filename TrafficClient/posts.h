@@ -1,0 +1,5 @@
+
+#ifndef BULLETIN_BOARD_DATA_H
+#define BULLETIN_BOARD_DATA_H
+
+#endif /* BULLETIN_BOARD_DATA_H */
