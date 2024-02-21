@@ -361,4 +361,66 @@ Before the changes we made, it would have had to be requested via the route,
 
 ## Task 7, 8, & 9: Configuring Metrics, Scaling Out, Scaling Up
 
+Finally, lets try out scaling on the Bulletin Board API. First let's configure metrics:
+
+![Configured Metrics](img/DockerProj_Metrics.png)
+
+#### Then, let's write a traffic client to simulate heavy server load!
+
+Originally, I was going to make a traffic tester that would hit my state-changing endpoints 
+(i.e.: the endpoints that add or remove data from the SQL database), 
+but then I realized, 1, that would be a lot more involved than I expected, and 2, 
+I didn't want to risk overdrawing my Azure Credits (Spoiler alert: I ended up using 
+up all my credit anyway, lol). As such, instead, I decided to just write another endpoint
+on a specially-made traffic testing controller and service. The service will be 
+added during dependency injection as a transient service, so that we can really 
+get the most compute demand out of every request our test client makes on that endpoint.
+
+![Testing Service](img/TrafficTestingService.png)
+
+The test service just has one method, SieveOfEratosthenes, which computes all prime numbers
+from 2 to \<upperLimit>. Now let's build and push these changes to our container registry.
+
+![Testing Endpoint is Live](img/TestEndptLive.png)
+
+And it's live! Feel free to try it:
+
+[https://csce590-sp1-dockerdep.azurewebsites.net/TrafficTesting/Sieve?limit=**(number >= 2)**](https://csce590-sp1-dockerdep.azurewebsites.net/TrafficTesting/Sieve?limit=5).
+
+Now let's run the test client [(Visit Test Client Source Code)](https://github.com/bsumner2/)! And let's start it up
+with 100 client threads as the parameter!
+
+![Hope I Don't Live to Regret This](img/HopeIDontRegretThis.png)
+
+![Needs More Power](img/NeedMorePower.png)
+![More!](https://i.makeagif.com/media/11-15-2019/iC1ukZ.gif)
+![May Have Gone Overboard](img/MayHaveGoneOverboard.png)
+
+##### After Letting Server Restabilize...
+
+I let the traffic tester run for a while, and then performed the scale out.
+
+![Scale Out](img/ScaleOut_Cfg.png)
+
+Its effects on performance were visible after letting the client run for a while longer. The CPU Time spike on the left was only a temporary spike, accompanied by a spike in response time. The Traffic Testing Client RNG probably tried requesting really high limits when hitting the Sieve endpoint with their requests.
+
+![Scale Out](img/ScaleOut.png)
+
+Finally, let's scale up our app to the Premium P2v2 pricing plan tier. 
+This time, you'll see that the graph change was in the opposite direction.
+The CPU Time dropped after the scale up, instead of increasing. I think this
+was because of the increased computational power supplied to us by the scale,
+up allowing our server to handle these requests at a fraction of the time it normally took.
+
+![Scale Up](img/ScaleUp_Cfg.png)
+
+Scale up confirmation:
+
+![Scale Up Confirmation](img/ScaleUp_Confirmed.png)
+
+![Scale Up Finished](img/ScaleUp.png)
+
+As mentioned before, I believe the increased compute power the scale up 
+offered allowed the server to keep pace with the test client and fulfill
+its Sieve requests at a fraction of the time it took before scaling up.
 
