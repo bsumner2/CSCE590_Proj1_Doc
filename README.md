@@ -387,7 +387,7 @@ And it's live! Feel free to try it:
 
 [https://csce590-sp1-dockerdep.azurewebsites.net/TrafficTesting/Sieve?limit=**(number >= 2)**](https://csce590-sp1-dockerdep.azurewebsites.net/TrafficTesting/Sieve?limit=5).
 
-Now let's run the test client [(Visit Test Client Source Code)](https://github.com/bsumner2/)! And let's start it up
+Now let's run the test client [(Visit Test Client Source Code)](https://github.com/bsumner2/CSCE590_Proj1_Doc/tree/main/TrafficClient/NewClient)! And let's start it up
 with 100 client threads as the parameter!
 
 ![Hope I Don't Live to Regret This](img/HopeIDontRegretThis.png)
@@ -395,6 +395,8 @@ with 100 client threads as the parameter!
 ![Needs More Power](img/NeedMorePower.png)
 ![More!](https://i.makeagif.com/media/11-15-2019/iC1ukZ.gif)
 ![May Have Gone Overboard](img/MayHaveGoneOverboard.png)
+
+Okay, I may have let it go overboard. Let's let it sit and come back to it.
 
 ##### After Letting Server Restabilize...
 
